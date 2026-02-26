@@ -1,0 +1,28 @@
+services:
+  videogames-backend:
+    build:
+      context: ./videogames-backend
+      dockerfile: ./Dockerfile
+    expose:
+      - "8080"
+    env_file:
+      - ./videogames-backend/.env
+    networks:
+      - appnet
+
+  videogames-frontend:
+    build:
+      context: ./videogames-frontend
+      dockerfile: ./Dockerfile
+    ports:
+      - "80:80"
+    environment:
+      - VITE_API_URL=http://videogames-backend:8080
+    depends_on:
+      - videogames-backend
+    networks:
+      - appnet
+
+networks:
+  appnet:
+    driver: bridge

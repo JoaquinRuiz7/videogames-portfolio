@@ -23,7 +23,7 @@ kubectl create secret generic videogames-backend-service-secrets \
 #Create backend pods
 kubectl apply -f ./videogames-backend/kubernates/deploy/manifest.yaml
 #Create backend services
-kubectl apply -f ./videogames-backend/kubernates/services/manifest.yaml
+kubectl apply -f ./videogames-backend/kubernates/service/manifest.yaml
 
 #Create frontend config map
 kubectl apply -f ./videogames-frontend/kubernates/config-map/manifest.yaml

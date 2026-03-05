@@ -1,0 +1,17 @@
+spring:
+  application:
+    name: videogames
+  output:
+    ansi:
+      enabled: always
+
+cheapShark:
+  base:
+    url: https://www.cheapshark.com/api/1.0
+
+rawg:
+  base:
+    url: https://api.rawg.io/api
+cors:
+  available:
+    origins: "http://localhost:5173,http://localhost,http://videogames-frontend"

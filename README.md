@@ -92,6 +92,9 @@ API keys are managed using **Kubernetes Secrets**.
 
 Secrets are **not included in the repository** for security reasons.
 
+### Map config
+The front end deployment has a map config
+
 ---
 
 ## RAWG API Key Setup
@@ -111,18 +114,24 @@ Then create a `.env` file inside videogames-backend project and add the followin
 
 ## Running the Application Locally
 
-Make sure you have **Docker** and **Docker Compose** installed.
+Make sure you have **Docker**,  **Docker Compose**  & **Kubernates** installed.
 
 Then run:
 
 ```bash
-docker compose build
-docker compose up -d
+./kubernates-setup.sh
 ```
 
-Then open http://localhost:3000 Or you can also install kubernetes 
-and run the shell script ./kubernetes-setup.sh
-and the app will be available at http://videogames.local
-and you are all done!
+Application setup will be done automatically you will be prompted just 1 step.
+
+Or also you can directly create the corresponding .env files specified in the docker-compose.yaml 
+and run:
+
+```bash
+docker compose build
+docker compose up
+```
+
+And the app will be running in localhost:3000
 
 Feel free to explore the application and the infrastructure setup behind it.

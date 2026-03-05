@@ -120,6 +120,9 @@ docker compose build
 docker compose up -d
 ```
 
-Then open http://localhost:3000 and you are all done!
+Then open http://localhost:3000 Or you can also install kubernetes 
+and run the shell script ./kubernetes-setup.sh
+and the app will be available at http://videogames.local
+and you are all done!
 
 Feel free to explore the application and the infrastructure setup behind it.

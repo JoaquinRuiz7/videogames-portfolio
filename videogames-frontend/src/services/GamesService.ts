@@ -35,17 +35,6 @@ class GamesService {
     return data;
   }
 
-  private getFetchGamesEndpoint(page?: string, name?: string): string {
-    if (page) {
-      return `/games?page=${encodeURIComponent(page)}`;
-    }
-
-    if (name) {
-      return `/games?search=${encodeURIComponent(name)}&exact=false`;
-    }
-
-    return '/games';
-  }
   public async getGameDeal(name: string): Promise<DealResponse> {
     const { data } = await axiosInstance.get(`/games/${encodeURIComponent(name)}/deals`);
     return data;
@@ -60,6 +49,18 @@ class GamesService {
     this.detailsCache.set(gameId, data);
 
     return data;
+  }
+
+  private getFetchGamesEndpoint(page?: string, name?: string): string {
+    if (page) {
+      return `/games?page=${encodeURIComponent(page)}`;
+    }
+
+    if (name) {
+      return `/games?search=${encodeURIComponent(name)}&exact=false`;
+    }
+
+    return '/games';
   }
 }
 

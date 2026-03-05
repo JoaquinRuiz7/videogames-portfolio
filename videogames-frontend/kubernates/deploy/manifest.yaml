@@ -14,11 +14,9 @@ spec:
     spec:
       containers:
         - name: videogames-frontend
-          image: videogames-frontend:3.0
+          image: videogames-frontend:latest
           ports:
             - containerPort: 80
           envFrom:
             - secretRef:
                 name: videogames-frontend-secret
-
-

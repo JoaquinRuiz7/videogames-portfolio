@@ -1,5 +1,5 @@
 services:
-  videogames-backend:
+  videogames-backend-service:
     build:
       context: ./videogames-backend
       dockerfile: ./Dockerfile
@@ -15,11 +15,11 @@ services:
       context: ./videogames-frontend
       dockerfile: ./Dockerfile
     ports:
-      - "80:80"
+      - "3000:80"
     environment:
-      - VITE_API_URL=http://videogames-backend:8080
+      - VITE_API_URL=/api
     depends_on:
-      - videogames-backend
+      - videogames-backend-service
     networks:
       - appnet
 

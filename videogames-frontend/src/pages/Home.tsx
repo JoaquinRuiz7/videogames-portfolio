@@ -1,15 +1,16 @@
+import type { Game, GamesResponse } from '../types/game';
 import { useEffect, useState } from 'react';
 import SearchBar from '../components/SearchBar';
 import GamesTable from '../components/GamesTable';
 import ErrorPage from '../components/ErrorPage';
 import { gamesService, getErrorStatusCode } from '../services/GamesService';
-import type { GamesResponse } from '../types/game';
 
 type HomeProps = {
   onOpenGame: (name: string) => void;
+  onViewDetails: (game: Game) => void;
 };
 
-const Home = ({ onOpenGame }: HomeProps) => {
+const Home = ({ onOpenGame, onViewDetails }: HomeProps) => {
   const [gamesResponse, setGamesResponse] = useState<GamesResponse>({
     next: null,
     previous: null,
@@ -105,6 +106,7 @@ const Home = ({ onOpenGame }: HomeProps) => {
           gamesResponse={gamesResponse}
           isLoading={isLoadingGames}
           onOpenGame={onOpenGame}
+          onViewDetails={onViewDetails}
           onNextPage={() => loadGames(gamesResponse.next as string)}
           onPreviousPage={() => loadGames(gamesResponse.previous as string)}
         />

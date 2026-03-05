@@ -1,5 +1,6 @@
 import { axiosInstance } from '../api/axios';
-import type { GameDeal, GamesResponse } from '../types/game';
+import type { DealResponse, GamesResponse } from '../types/game';
+import type { GameDetail } from '../types/GameDetail.ts';
 
 export const getErrorStatusCode = (error: unknown): number | null => {
   if (
@@ -19,6 +20,7 @@ export const getErrorStatusCode = (error: unknown): number | null => {
 
 class GamesService {
   private readonly cache: Map<string, GamesResponse> = new Map<string, GamesResponse>();
+  private readonly detailsCache: Map<number, GameDetail> = new Map<number, GameDetail>();
 
   public async fetchGames(pageUrl?: string, name?: string): Promise<GamesResponse> {
     const endpoint: string = this.getFetchGamesEndpoint(pageUrl, name);
@@ -29,6 +31,7 @@ class GamesService {
 
     const { data } = await axiosInstance.get(endpoint);
     this.cache.set(endpoint, data);
+
     return data;
   }
 
@@ -43,8 +46,19 @@ class GamesService {
 
     return '/games';
   }
-  public async getGameDeal(name: string): Promise<GameDeal[]> {
-    const { data } = await axiosInstance.get(`/games/${encodeURIComponent(name)}/deal`);
+  public async getGameDeal(name: string): Promise<DealResponse> {
+    const { data } = await axiosInstance.get(`/games/${encodeURIComponent(name)}/deals`);
+    return data;
+  }
+
+  public async getGameDetails(gameId: number): Promise<GameDetail> {
+    if (this.detailsCache.has(gameId)) {
+      return this.detailsCache.get(gameId) as GameDetail;
+    }
+
+    const { data } = await axiosInstance.get(`/games/${gameId}`);
+    this.detailsCache.set(gameId, data);
+
     return data;
   }
 }

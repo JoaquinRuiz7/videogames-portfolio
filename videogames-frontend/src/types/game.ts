@@ -2,6 +2,7 @@ export type Game = {
   id: number;
   name: string;
   thumbnail: string;
+  screenshots: string[];
   metacritic: number;
   esrb: string;
   platforms: string[];
@@ -14,15 +15,25 @@ export type GamesResponse = {
   games: Game[];
 };
 
-export type GameDeal = {
-  game: string;
-  price: number;
-  dealUrl: string;
+export type DealResponse = {
+  deals: GameDeal[];
 };
 
+export type GameDeal = {
+  dealGame: string;
+  dealPrice: number;
+  dealUrl: string;
+  store?: Store;
+};
+
+export type Store = {
+  name: string;
+  logo: string;
+};
 export type GameDetails = {
   name: string;
   thumbnail: string;
+  screenshots: string[];
   rating: number;
   metacritic: number | null;
   esrb: string | null;

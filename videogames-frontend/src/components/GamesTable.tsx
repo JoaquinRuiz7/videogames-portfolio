@@ -1,6 +1,7 @@
 import { Fragment, useMemo, useState } from 'react';
-import type { GameDeal, GamesResponse } from '../types/game';
+import type { DealResponse, Game, GameDeal, GamesResponse } from '../types/game';
 import { gamesService } from '../services/GamesService.ts';
+import DealDisplay from './DealDisplay.tsx';
 
 type GamesTableProps = {
   gamesResponse: GamesResponse;
@@ -8,6 +9,7 @@ type GamesTableProps = {
   onPreviousPage: () => void;
   isLoading: boolean;
   onOpenGame: (name: string) => void;
+  onViewDetails: (game: Game) => void;
 };
 
 const buildOptimizedThumbnail = (thumbnail: string) => {
@@ -50,6 +52,7 @@ const GamesTable = ({
   onPreviousPage,
   isLoading,
   onOpenGame,
+  onViewDetails,
 }: GamesTableProps) => {
   const { games, next, previous } = gamesResponse;
   const [dealLoadingByRow, setDealLoadingByRow] = useState<Record<string, boolean>>({});
@@ -62,9 +65,9 @@ const GamesTable = ({
   const getGameDeal = async (rowKey: string, name: string) => {
     try {
       setDealLoadingByRow((currentState) => ({ ...currentState, [rowKey]: true }));
-      const dealResponse = await gamesService.getGameDeal(name);
+      const dealResponse: DealResponse = await gamesService.getGameDeal(name);
       setExpandedDealRowKey(rowKey);
-      setSelectedDeal(dealResponse[0] ?? null);
+      setSelectedDeal(dealResponse.deals[0] ?? null);
     } catch (error) {
       console.error(error);
       setExpandedDealRowKey(rowKey);
@@ -117,6 +120,13 @@ const GamesTable = ({
                     >
                       {game.name}
                     </button>
+                    <button
+                      type="button"
+                      className="view-details-button"
+                      onClick={() => onViewDetails(game)}
+                    >
+                      View details
+                    </button>
                   </span>
                   <span>{game.esrb}</span>
                   <span className="platforms-cell">
@@ -141,30 +151,20 @@ const GamesTable = ({
                   </span>
                 </div>
 
-                {isExpanded ? (
+                {isExpanded && (
                   <div className="table-row-expanded" role="row">
                     {selectedDeal ? (
-                      <div className="deal-expanded-content">
-                        <p className="deal-result-label">Best deal found for {selectedDeal.game}</p>
-                        <p>
-                          Deal price: <strong>${selectedDeal.price.toFixed(2)}</strong>
-                        </p>
-                        <div className="deal-expanded-actions">
-                          <a
-                            href={selectedDeal.dealUrl}
-                            target="_blank"
-                            rel="noreferrer"
-                            className="deal-result-link"
-                          >
-                            Go to store offer
-                          </a>
-                        </div>
-                      </div>
+                      <DealDisplay
+                        dealGame={selectedDeal.dealGame}
+                        dealPrice={selectedDeal.dealPrice}
+                        dealUrl={selectedDeal.dealUrl}
+                        store={selectedDeal.store}
+                      />
                     ) : (
                       <p className="deal-empty">No deal available for this game right now.</p>
                     )}
                   </div>
-                ) : null}
+                )}
               </Fragment>
             );
           })

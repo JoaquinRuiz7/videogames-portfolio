@@ -6,18 +6,18 @@ is a web application that allows users to search for videogames and discover the
 
 ## Learning Objectives
 
-This project was created primarily as a **hands-on learning exercise for Kubernetes**.
+This project was developed primarily as a **hands-on exercise to deepen my understanding of Kubernetes**.
 
-The main objective was to understand how modern containerized applications are deployed and orchestrated in a distributed environment.
+The main goal was to explore how modern containerized applications are deployed and orchestrated within distributed environments, while also serving as practical experience with **WebFlux and reactive programming**.
 
-Through this project I explored:
+Through this project, I focused on the following areas:
 
-- Docker containerization
-- Kubernetes deployments and scaling
-- service-to-service communication
-- ingress configuration and routing
-- secrets management
-- container networking
+- Docker-based containerization
+- Kubernetes deployments and horizontal scaling
+- Service-to-service communication
+- Ingress configuration and traffic routing
+- Secrets management
+- Container networking and service discovery
 
 The application serves as a practical environment to experiment with **real-world Kubernetes concepts**.
 

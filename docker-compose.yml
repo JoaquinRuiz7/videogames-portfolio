@@ -1,5 +1,5 @@
 services:
-  videogames-backend-service:
+  backend-service:
     build:
       context: ./videogames-backend
       dockerfile: ./Dockerfile
@@ -10,7 +10,7 @@ services:
     networks:
       - appnet
 
-  videogames-frontend:
+  frontend:
     build:
       context: ./videogames-frontend
       dockerfile: ./Dockerfile
@@ -19,7 +19,7 @@ services:
     environment:
       - VITE_API_URL=/api
     depends_on:
-      - videogames-backend-service
+      - backend-service
     networks:
       - appnet
 

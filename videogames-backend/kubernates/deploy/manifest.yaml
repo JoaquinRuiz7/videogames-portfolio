@@ -1,0 +1,22 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: videogames-backend-service
+spec:
+  selector:
+    matchLabels:
+      app: videogames-backend-service
+  replicas: 2
+  template:
+    metadata:
+      labels:
+        app: videogames-backend-service
+    spec:
+      containers:
+        - name: videogames-backend-service
+          image: videogames-backend-service:latest
+          ports:
+            - containerPort: 8080
+          envFrom:
+            - secretRef:
+                name: videogames-backend-service-secrets

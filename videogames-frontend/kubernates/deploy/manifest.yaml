@@ -18,5 +18,5 @@ spec:
           ports:
             - containerPort: 80
           envFrom:
-            - secretRef:
-                name: videogames-frontend-secrets
+            - configMapRef:
+                name: videogames-frontend-config

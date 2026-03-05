@@ -1,0 +1,6 @@
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: videogames-frontend-config
+data:
+  VITE_API_URL: "/api"

@@ -12,6 +12,7 @@ import com.jota.videogames.infrastructure.mappers.CheapSharkMapper;
 import java.net.URI;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -33,6 +34,7 @@ public class CheapSharkClient implements IDealApiClient, IStoreApiClient {
         this.cheapSharkWebClient = cheapSharkWebClient;
     }
 
+    @Override
     public Flux<Deal> getGameCheapestDeal(final String title, final int exact) {
         return this.cheapSharkWebClient
             .get()
@@ -95,6 +97,7 @@ public class CheapSharkClient implements IDealApiClient, IStoreApiClient {
     }
 
     @Override
+    @Cacheable("stores")
     public Flux<Store> fetchStores() {
         return cheapSharkWebClient
             .get()

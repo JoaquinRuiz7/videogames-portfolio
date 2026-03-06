@@ -15,6 +15,7 @@ import com.jota.videogames.infrastructure.mappers.RawgMapper;
 import java.util.List;
 import org.springframework.beans.factory.annotation.Qualifier;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.cache.annotation.Cacheable;
 import org.springframework.stereotype.Component;
 import org.springframework.web.reactive.function.client.WebClient;
 import reactor.core.publisher.Flux;
@@ -27,6 +28,7 @@ public class RawgApiClient implements IGameApiClient {
     private static final String GENRES_PATh = "/genres";
     private static final String SCREENSHOTS_PATH = "/games/{gameId}/screenshots";
     private static final String GAME_DETAILS_PATH = "/games/{gameId}";
+
     private final WebClient rawgClient;
 
     @Value("${rawg.api.key}")
@@ -36,6 +38,7 @@ public class RawgApiClient implements IGameApiClient {
         this.rawgClient = rawgClient;
     }
 
+    @Cacheable("videogames")
     public Mono<GamesPage> fetchGames(
         final String title,
         final String exact,
@@ -103,6 +106,7 @@ public class RawgApiClient implements IGameApiClient {
     }
 
     @Override
+    @Cacheable("videogames")
     public Mono<GameDetails> getGameDetails(final Long gameId) {
         return rawgClient
             .get()

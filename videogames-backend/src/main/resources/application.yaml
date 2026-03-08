@@ -14,4 +14,4 @@ rawg:
     url: https://api.rawg.io/api
 cors:
   available:
-    origins: "http://localhost:5173,http://localhost,http://videogames-frontend"
+    origins: "http://localhost:5173,http://localhost,http://videogames-frontend-service"

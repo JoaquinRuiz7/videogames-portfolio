@@ -14,7 +14,8 @@ spec:
     spec:
       containers:
         - name: videogames-frontend
-          image: videogames-frontend:latest
+          image: videogames-frontend-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 80
           envFrom:

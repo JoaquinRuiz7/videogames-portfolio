@@ -1,5 +1,6 @@
 services:
   backend-service:
+    image: videogames-backend-service:latest
     build:
       context: ./videogames-backend
       dockerfile: ./Dockerfile
@@ -11,6 +12,7 @@ services:
       - appnet
 
   frontend:
+    image: videogames-frontend-service:latest
     build:
       context: ./videogames-frontend
       dockerfile: ./Dockerfile

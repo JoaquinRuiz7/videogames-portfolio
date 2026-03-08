@@ -15,6 +15,7 @@ spec:
       containers:
         - name: videogames-backend-service
           image: videogames-backend-service:latest
+          imagePullPolicy: IfNotPresent
           ports:
             - containerPort: 8080
           envFrom:

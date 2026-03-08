@@ -64,18 +64,19 @@ kubectl apply -f ./videogames-frontend/kubernates/deploy/manifest.yaml
 kubectl apply -f ./videogames-frontend/kubernates/service/manifest.yaml
 kubectl apply -f ./videogames-frontend/kubernates/ingress/manifest.yaml
 
-echo "Waiting for ingress IP..."
+echo "Detecting ingress address..."
 
-for i in {1..40}; do
-  INGRESS_IP=$(kubectl get ingress videogames-ingress -o jsonpath='{.status.loadBalancer.ingress[0].ip}' 2>/dev/null || true)
-  if [[ -n "${INGRESS_IP:-}" ]]; then
-    break
-  fi
-  echo "Ingress not ready yet..."
-  sleep 5
-done
+INGRESS_IP=$(kubectl get svc ingress-nginx-controller \
+  -n ingress-nginx \
+  -o jsonpath='{.status.loadBalancer.ingress[0].ip}{.status.loadBalancer.ingress[0].hostname}')
+
+[[ -z "${INGRESS_IP:-}" ]] && error "Ingress address not found"
+
+echo "Ingress address: $INGRESS_IP"
 
 [[ -z "${INGRESS_IP:-}" ]] && error "Ingress IP not assigned"
+
+echo "Ingress IP: $INGRESS_IP"
 
 echo "Ingress IP: $INGRESS_IP"
 

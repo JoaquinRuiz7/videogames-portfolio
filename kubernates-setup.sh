@@ -29,19 +29,29 @@ case "$OS" in
     ;;
 esac
 
+HOST="videogames.local"
+LOCAL_ADDR="127.0.0.1"
+
 echo "Building docker images..."
-docker compose build
+
+docker build -t videogames-backend-service ./videogames-backend
+docker build -t videogames-frontend-service ./videogames-frontend
 
 echo "Installing nginx ingress controller..."
-kubectl apply -f https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
+
+kubectl apply -f \
+https://raw.githubusercontent.com/kubernetes/ingress-nginx/main/deploy/static/provider/cloud/deploy.yaml
 
 echo "Waiting for ingress controller..."
+
 kubectl wait --namespace ingress-nginx \
   --for=condition=ready pod \
   --selector=app.kubernetes.io/component=controller \
   --timeout=180s
 
-echo "Get an API key from  RAWG here from https://rawg.io/apidocs and paste it in the next prompt"
+echo ""
+echo "Get an API key from https://rawg.io/apidocs"
+echo ""
 
 RAWG_API_KEY=${RAWG_API_KEY:-}
 
@@ -50,45 +60,47 @@ while [[ -z "$RAWG_API_KEY" ]]; do
 done
 
 echo "Creating secret..."
+
 kubectl create secret generic videogames-backend-service-secrets \
   --from-literal=RAWG_API_KEY="$RAWG_API_KEY" \
   --dry-run=client -o yaml | kubectl apply -f -
 
 echo "Deploying backend..."
+
 kubectl apply -f ./videogames-backend/kubernates/deploy/manifest.yaml
 kubectl apply -f ./videogames-backend/kubernates/service/manifest.yaml
 
 echo "Deploying frontend..."
+
 kubectl apply -f ./videogames-frontend/kubernates/config-map/manifest.yaml
 kubectl apply -f ./videogames-frontend/kubernates/deploy/manifest.yaml
 kubectl apply -f ./videogames-frontend/kubernates/service/manifest.yaml
 kubectl apply -f ./videogames-frontend/kubernates/ingress/manifest.yaml
 
-echo "Detecting ingress address..."
+echo "Waiting for ingress resource..."
 
-INGRESS_IP=$(kubectl get svc ingress-nginx-controller \
-  -n ingress-nginx \
-  -o jsonpath='{.status.loadBalancer.ingress[0].ip}{.status.loadBalancer.ingress[0].hostname}')
+for i in {1..40}; do
+  if kubectl get ingress videogames-ingress >/dev/null 2>&1; then
+    break
+  fi
+  echo "Ingress not ready yet..."
+  sleep 3
+done
 
-[[ -z "${INGRESS_IP:-}" ]] && error "Ingress address not found"
+kubectl get ingress videogames-ingress >/dev/null 2>&1 || error "Ingress was not created"
 
-echo "Ingress address: $INGRESS_IP"
-
-[[ -z "${INGRESS_IP:-}" ]] && error "Ingress IP not assigned"
-
-echo "Ingress IP: $INGRESS_IP"
-
-echo "Ingress IP: $INGRESS_IP"
-
-HOST="videogames.local"
+echo "Ingress detected."
 
 if grep -q "$HOST" "$HOSTS_FILE"; then
   echo "$HOST already exists in hosts file"
 else
-  echo "Adding $HOST → $INGRESS_IP to hosts file"
-  echo "$INGRESS_IP $HOST" | $SUDO tee -a "$HOSTS_FILE" >/dev/null || \
-  echo "Could not modify hosts file automatically. Add manually:"
-  echo "$INGRESS_IP $HOST"
+  echo "Adding $HOST → $LOCAL_ADDR to hosts file"
+
+  echo "$LOCAL_ADDR $HOST" | $SUDO tee -a "$HOSTS_FILE" >/dev/null || {
+    echo "Could not modify hosts automatically."
+    echo "Add manually:"
+    echo "$LOCAL_ADDR $HOST"
+  }
 fi
 
 echo ""

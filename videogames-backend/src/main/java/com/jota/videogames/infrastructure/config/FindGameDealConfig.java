@@ -1,11 +1,9 @@
 package com.jota.videogames.infrastructure.config;
 
-import com.jota.videogames.application.interfaces.deals.IFindGameDealFromSpecificStoreUseCase;
-import com.jota.videogames.application.interfaces.deals.IFindGameDealUseCase;
-import com.jota.videogames.application.usecases.FindGameDealFromSpecificStoreImpl;
-import com.jota.videogames.application.usecases.FindGameDealUseCaseImpl;
-import com.jota.videogames.domain.interfaces.IDealApiClient;
-import com.jota.videogames.domain.interfaces.IStoreApiClient;
+import com.jota.videogames.application.ports.IDealRepository;
+import com.jota.videogames.application.ports.IStoreRepository;
+import com.jota.videogames.application.usecases.FindGameDealFromSpecificStore;
+import com.jota.videogames.application.usecases.FindGameDealUseCase;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 
@@ -13,17 +11,17 @@ import org.springframework.context.annotation.Configuration;
 public class FindGameDealConfig {
 
     @Bean
-    public IFindGameDealUseCase iFindGameDealUseCase(
-        final IDealApiClient dealApiClient,
-        final IStoreApiClient storeApiClient
+    public FindGameDealUseCase iFindGameDealUseCase(
+            final IDealRepository dealApiClient,
+            final IStoreRepository storeApiClient
     ) {
-        return new FindGameDealUseCaseImpl(dealApiClient, storeApiClient);
+        return new FindGameDealUseCase(dealApiClient, storeApiClient);
     }
 
     @Bean
-    public IFindGameDealFromSpecificStoreUseCase findGameDealFromSpecificStoreUseCase(
-        final IDealApiClient dealApiClient, final IStoreApiClient storeApiClient) {
-        return new FindGameDealFromSpecificStoreImpl(dealApiClient, storeApiClient);
+    public FindGameDealFromSpecificStore findGameDealFromSpecificStoreUseCase(
+            final IDealRepository dealApiClient, final IStoreRepository storeApiClient) {
+        return new FindGameDealFromSpecificStore(dealApiClient, storeApiClient);
     }
 
 }

@@ -6,13 +6,13 @@ import reactor.core.publisher.Mono;
 
 public class GetGameDetailsUseCase {
 
-    private final IGameRepository gameApiClient;
+    private final IGameRepository gameRepository;
 
     public GetGameDetailsUseCase(final IGameRepository gameApiClient) {
-        this.gameApiClient = gameApiClient;
+        this.gameRepository = gameApiClient;
     }
 
     public Mono<GameDetails> getGameDetails(final Long gameId) {
-        return gameApiClient.getGameDetails(gameId);
+        return gameRepository.getGameDetails(gameId);
     }
 }

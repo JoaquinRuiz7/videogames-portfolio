@@ -6,13 +6,13 @@ import reactor.core.publisher.Flux;
 
 public class FetchStoresUseCase {
 
-    private final IStoreRepository storeApiClient;
+    private final IStoreRepository storeRepository;
 
-    public FetchStoresUseCase(final IStoreRepository storeApiClient) {
-        this.storeApiClient = storeApiClient;
+    public FetchStoresUseCase(final IStoreRepository storeRepository) {
+        this.storeRepository = storeRepository;
     }
 
     public Flux<Store> execute() {
-        return storeApiClient.fetchStores();
+        return storeRepository.fetchStores();
     }
 }

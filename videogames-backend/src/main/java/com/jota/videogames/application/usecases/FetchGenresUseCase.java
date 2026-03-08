@@ -6,13 +6,13 @@ import reactor.core.publisher.Flux;
 
 public class FetchGenresUseCase {
 
-    private final IGameRepository gameApiClient;
+    private final IGameRepository gameRepository;
 
     public FetchGenresUseCase(final IGameRepository gameApiClient) {
-        this.gameApiClient = gameApiClient;
+        this.gameRepository = gameApiClient;
     }
 
     public Flux<Genre> execute() {
-        return this.gameApiClient.fetchGenres();
+        return this.gameRepository.fetchGenres();
     }
 }

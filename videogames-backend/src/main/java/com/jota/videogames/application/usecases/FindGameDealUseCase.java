@@ -7,27 +7,27 @@ import reactor.core.publisher.Flux;
 
 public class FindGameDealUseCase {
 
-    private final IDealRepository dealApiClient;
-    private final IStoreRepository storeApiClient;
+    private final IDealRepository dealRepository;
+    private final IStoreRepository storeRepository;
 
     public FindGameDealUseCase(
             final IDealRepository dealApiClient,
             final IStoreRepository storeApiClient
     ) {
-        this.dealApiClient = dealApiClient;
-        this.storeApiClient = storeApiClient;
+        this.dealRepository = dealApiClient;
+        this.storeRepository = storeApiClient;
     }
 
     public Flux<Deal> execute(String name) {
-        return dealApiClient
+        return dealRepository
                 .getGameCheapestDeal(name, 1)
-                .switchIfEmpty(dealApiClient.getGameCheapestDeal(name, 0))
+                .switchIfEmpty(dealRepository.getGameCheapestDeal(name, 0))
                 .next()
                 .flatMap(deal ->
-                        dealApiClient.getDealById(deal.getDealId())
+                        dealRepository.getDealById(deal.getDealId())
                 )
                 .flatMap(detailedDeal ->
-                        storeApiClient
+                        storeRepository
                                 .fetchStores()
                                 .filter(store -> store.getId().equals(detailedDeal.getStore().getId()))
                                 .next()

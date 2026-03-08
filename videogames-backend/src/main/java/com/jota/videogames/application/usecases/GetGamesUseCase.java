@@ -8,10 +8,10 @@ import reactor.core.publisher.Mono;
 
 public class GetGamesUseCase {
 
-    private final IGameRepository gameApiClient;
+    private final IGameRepository gameRepository;
 
     public GetGamesUseCase(IGameRepository gameApiClient) {
-        this.gameApiClient = gameApiClient;
+        this.gameRepository = gameApiClient;
     }
 
 
@@ -21,11 +21,11 @@ public class GetGamesUseCase {
             String page,
             Integer limit
     ) {
-        return gameApiClient.fetchGames(search, exact, page, limit)
+        return gameRepository.fetchGames(search, exact, page, limit)
                 .flatMap(g ->
                         Flux.fromIterable(g.games())
                                 .flatMap(game ->
-                                        gameApiClient.getGameScreenshots(game.getId())
+                                        gameRepository.getGameScreenshots(game.getId())
                                                 .map(screenshots ->
                                                         new Game(
                                                                 game.getId(),

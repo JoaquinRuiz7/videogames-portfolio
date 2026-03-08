@@ -9,26 +9,26 @@ import reactor.core.publisher.Mono;
 
 public class FindGameDealFromSpecificStore {
 
-    private final IDealRepository dealApiClient;
-    private final IStoreRepository storeApiClient;
+    private final IDealRepository dealRepository;
+    private final IStoreRepository storeRepository;
 
     public FindGameDealFromSpecificStore(
             final IDealRepository dealApiClient,
             final IStoreRepository storeApiClient
     ) {
-        this.dealApiClient = dealApiClient;
-        this.storeApiClient = storeApiClient;
+        this.dealRepository = dealApiClient;
+        this.storeRepository = storeApiClient;
 
     }
 
     public Flux<Deal> execute(Long gameId, Long storeId) {
 
-        Mono<Store> storeMono = storeApiClient
+        Mono<Store> storeMono = storeRepository
                 .fetchStores()
                 .filter(s -> s.getId().equals(storeId))
                 .singleOrEmpty();
 
-        return dealApiClient
+        return dealRepository
                 .getGameDeals(gameId)
                 .filter(d -> d.getStore().getId().equals(storeId))
                 .flatMap(deal ->
